@@ -1,11 +1,14 @@
 #include "srf10.h"
 #include <ArduinoJson.h>
+#include <SoftwareSerial.h>
 
+SoftwareSerial linkSerial(19, 18); // RX, TX
 
 void setup() {
   // put your setup code here, to run once:
   Wire.begin();                // join i2c bus (address optional for master)
   Serial.begin(9600);          // start serial communication at 9600bps
+  linkSerial.begin(4800);
 }
 
 void loop() {
@@ -38,7 +41,7 @@ void loop() {
   // Send Post request to backend 
   serializeJson(bin_json, Serial); // send this to server
   Serial.println();
-
+  serializeJson(bin_json, linkSerial); 
 
   
 
