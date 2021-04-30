@@ -1,4 +1,5 @@
 #include "height.h"
+#include "weight.h"
 #include <SoftwareSerial.h>
 #include <math.h>
 
@@ -10,6 +11,7 @@ void setup() {
   // put your setup code here, to run once:
   linkSerial.begin(4800);
 
+  weightSetup();
 }
 
 void loop() {
@@ -17,7 +19,8 @@ void loop() {
 
 
 
-  // Get Weight 
+  // Get Weight, not accurate value 
+  float weight = getWeight();
 
 
   
