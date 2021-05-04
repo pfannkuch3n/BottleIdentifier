@@ -23,7 +23,7 @@ void loop() {
 
 
   // Convert to JSON
-  StaticJsonDocument<200> bin_json;
+  StaticJsonDocument<300> bin_json;
   
   bin_json["hostname"] = "bin";
   JsonArray srf = bin_json.createNestedArray("srf");
@@ -32,7 +32,7 @@ void loop() {
   srf.add(srf3_value);
   
   // Percentage calcuation 
-  char percentage_value = "100%";
+  char* percentage_value = "100%";
 
 
   // Add percentage to json

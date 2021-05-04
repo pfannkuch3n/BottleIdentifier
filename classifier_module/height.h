@@ -108,7 +108,8 @@ int getHCSR(){
     }
     // try to get Distance from this json format
     // {"Protocol":"Bifrost","Device":"HCSR04","Driver version":"2.0.0","Properties":{"Distance":2617}}
-    double longitude = value["Distance"][1];
+    // Unit: milimeter
+    double longitude = value["Properties"]["Distance"];
     // hcsr04.ToString()
 
 

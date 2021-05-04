@@ -33,16 +33,16 @@ void loop() {
 
 
     // Convert to JSON
-  StaticJsonDocument<200> classifier_json;
-  
-  bin_json["hostname"] = "classifer";
-  bin_json["weight"] = abs(*h_top - *h_bottom);
-  bin_json["hardness"] = "100.00"
-  bin_json["weight"] = "1.00"
+//  StaticJsonDocument<200> classifier_json;
+//  
+//  classifier_json["hostname"] = "classifer";
+//  classifier_json["weight"] = abs(*h_top - *h_bottom);
+//  classifier_json["hardness"] = "100.00";
+//  classifier_json["weight"] = "1.00";
 
 
   // Send Post request to backend 
-  serializeJson(classifier_json, Serial); // send this to server
+  //serializeJson(classifier_json, Serial); // send this to server
   Serial.println();
 
   //Send data to ESP
