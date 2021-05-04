@@ -21,7 +21,7 @@ void loop() {
 
   // Get Weight, not accurate value 
   float weight = getWeight();
-  Serial.println("W: " + weight);
+  //Serial.println(weight);
 
   
   //Get Height
@@ -33,8 +33,9 @@ void loop() {
   //i2cScanner();
   Serial.println("SRF");
   Serial.println(getSRF(0x71)); 
+  Serial.println("HCSR");
   Serial.println(getHCSR());
-  delay(5000);
+  delay(1000);
     // Convert to JSON
 //  StaticJsonDocument<200> classifier_json;
 //  
