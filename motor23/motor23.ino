@@ -33,11 +33,13 @@ int pos2;
 int pos3;
 int pos4;
 int pos5;
+int position[5];
 
 int force2;
 int force3;
 int force4;
 int force5;
+int force[5];
 
 int maxpos;
 int minpos;
@@ -125,43 +127,40 @@ void measuring(){
 
  setMotor(30);
  delay(1000);
- pos1 = pos;
- Serial.print("position:");
- Serial.print(pos1*10);
- Serial.print("\t");
- Serial.print("Sensor:");
- Serial.println(analogRead(A0));
+ position[0] = pos;
+ force[0] = analogRead(A0);
+ 
       
  setMotor(0);
  delay(500);
  setMotor(60);
  delay(400);
- pos2 = pos;
- force2 = analogRead(A0);
+ pos[1] = pos;
+ force[1] = analogRead(A0);
  
  setMotor(0);
  delay(500);
  
  setMotor(120);
  delay(400);
- pos3 = pos;
- force2 = analogRead(A0);
+ pos[2] = pos;
+ force[2] = analogRead(A0);
  
  setMotor(0);
  delay(500);
  
  setMotor(180);
  delay(400);
- pos4 = pos;
- force4 = analogRead(A0);
+ pos[3] = pos;
+ force[3] = analogRead(A0);
  
  setMotor(0);
  delay(1000);
  
  setMotor(200);
  delay(300);
- pos5 = pos;
- force5 = analogRead(A0);
+ pos[4] = pos;
+ force[4] = analogRead(A0);
 
  setMotor(0);
  delay(200);
@@ -173,8 +172,10 @@ void measuring(){
   
 }
 
-void sendDatas(){
-  
+void sendDatas(int[] positions, int[] forces){
+for( int i=0; i<5; i++){
+  positions[i]=position[i];
+  forces[i] = force[i];
 }
 
 void loop() {
