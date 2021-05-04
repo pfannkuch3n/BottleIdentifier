@@ -1,4 +1,3 @@
-<<<<<<< HEAD:motor23/motor23.ino
 //Code by Reichenstein7 (thejamerson.com)
 
 //Keyboard Controls:
@@ -28,17 +27,10 @@ int prevT =0;
 float ePrev = 0;
 float eIntegral = 0;
 
-int pos1;
-int pos2;
-int pos3;
-int pos4;
-int pos5;
+
 int position[5];
 
-int force2;
-int force3;
-int force4;
-int force5;
+
 int force[5];
 
 int maxpos;
@@ -135,7 +127,7 @@ void measuring(){
  delay(500);
  setMotor(60);
  delay(400);
- pos[1] = pos;
+ position[1] = pos;
  force[1] = analogRead(A0);
  
  setMotor(0);
@@ -143,7 +135,7 @@ void measuring(){
  
  setMotor(120);
  delay(400);
- pos[2] = pos;
+ position[2] = pos;
  force[2] = analogRead(A0);
  
  setMotor(0);
@@ -151,7 +143,7 @@ void measuring(){
  
  setMotor(180);
  delay(400);
- pos[3] = pos;
+ position[3] = pos;
  force[3] = analogRead(A0);
  
  setMotor(0);
@@ -159,26 +151,34 @@ void measuring(){
  
  setMotor(200);
  delay(300);
- pos[4] = pos;
+ position[4] = pos;
  force[4] = analogRead(A0);
 
  setMotor(0);
  delay(200);
  
  setMotor(-30);
- delay(100);
+ delay(1000);
   
  setMotor(0);
   
 }
 
-void sendDatas(int[] positions, int[] forces){
-for( int i=0; i<5; i++){
-  positions[i]=position[i];
-  forces[i] = force[i];
+void sendDatas(int positions[5],int forces[5]){
+  for( int i=0; i<5; i++){
+    positions[i]=position[i];
+    forces[i] = force[i];
+  }
 }
 
 void loop() {
+  measuring();
+  for(int i=0;i<5;i++){
+    Serial.println(i);
+    Serial.println(position[i]);
+    Serial.println(force[i]);
+    Serial.println("=========");
+  }
 
-
+  delay(5000);
 }
