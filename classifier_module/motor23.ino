@@ -164,9 +164,9 @@ void measuring(){
 
  setMotor(0);
  delay(500);
- setMotor(220);
+ setMotor(200);
  
- delay(400);
+ delay(200);
  
  pos5 = pos;
  Serial.print("position5:");
@@ -174,11 +174,12 @@ void measuring(){
  Serial.print("\t");
  Serial.print("Sensor:");
  Serial.println(analogRead(A0));
-setMotor(0);
+ setMotor(0);
  delay(200);
- while(pos != minpos){
-  setMotor(-30);
- }
+ 
+ setMotor(-30);
+ delay(100);
+ setMotor(0);
   
 }
 
