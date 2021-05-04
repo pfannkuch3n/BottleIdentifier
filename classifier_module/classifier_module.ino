@@ -28,10 +28,13 @@ void loop() {
   //i2cScanner();
   int *h_top, *h_bottom;
   getHeight(h_top, h_bottom);
-  Serial.println(*h_top);
-  Serial.println(*h_bottom);
-
-
+  //Serial.println(*h_top);
+  //Serial.println(*h_bottom);
+  //i2cScanner();
+  Serial.println("SRF");
+  Serial.println(getSRF(0x71)); 
+  Serial.println(getHCSR());
+  delay(5000);
     // Convert to JSON
 //  StaticJsonDocument<200> classifier_json;
 //  

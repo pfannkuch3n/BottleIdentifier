@@ -42,7 +42,7 @@ int getSRF(int address)
     //Serial.println(reading);   // print the reading
   }
 
-  delay(250);                  // wait a bit since people have to read the output :)
+  //delay(250);                  // wait a bit since people have to read the output :)
   return reading;
 }
 
@@ -109,11 +109,11 @@ int getHCSR(){
     // try to get Distance from this json format
     // {"Protocol":"Bifrost","Device":"HCSR04","Driver version":"2.0.0","Properties":{"Distance":2617}}
     // Unit: milimeter
-    double longitude = value["Properties"]["Distance"];
-    // hcsr04.ToString()
+    double dist = value["Properties"]["Distance"];
+    //hcsr04.ToString()
 
 
-    return 10;
+    return dist;
     // convert e
 }
 
