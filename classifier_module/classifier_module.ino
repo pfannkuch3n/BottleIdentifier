@@ -21,7 +21,7 @@ void loop() {
 
   // Get Weight, not accurate value 
   float weight = getWeight();
-
+  Serial.println("W: " + weight);
 
   
   //Get Height
