@@ -159,6 +159,7 @@ void measuring(){
  
  setMotor(-30);
  delay(1000);
+ minpos= pos
   
  setMotor(0);
   
@@ -179,6 +180,7 @@ void loop() {
     Serial.println(force[i]);
     Serial.println("=========");
   }
+  Serial.println(minpos);
 
-  delay(5000);
+  delay(10000);
 }
