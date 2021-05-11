@@ -1,5 +1,6 @@
 #include "height.h"
 #include "weight.h"
+#include "hardness.h"
 #include <SoftwareSerial.h>
 #include <math.h>
 
@@ -10,8 +11,11 @@ void setup() {
    Serial.begin(9600);
   // put your setup code here, to run once:
   linkSerial.begin(4800);
-
+  pinMode(A2, INPUT); //FSR sensor to detect if the lid is closed or not
+  pinMode(7, INPUT_PULLUP); //Button to start the measurement if lid is closed
   weightSetup();
+
+  hardness_setup();
 }
 
 float getBottleHeight(){
@@ -33,70 +37,43 @@ float getBottleHeight(){
 
 int inst = 0;
 float weight, height, dim;
-float forces[5] = {0.00, 0.00, 0.00, 0.00, 0.00};
-float positions[5] = {0.00, 0.00, 0.00, 0.00, 0.00};
+
 
 
 void loop() {
-  if(Serial.available()>0){
-    inst = Serial.parseInt();
-  }
+  if(analogRead(A2)>50){
+    if(!digitalRead(7)){
+      if(getRawWeight()<5){
+        Serial.println("please place a bottle");
+      }else{
+      Serial.println("Height measurement in progress");
+      height = getBottleHeight();
+      delay(1000);
 
-  switch(inst){
-    case 0:
-      weight = 0.0;
-      height = 0.0;
-      dim = 0.0;
-      for(int i=0;i<5;i++){
-        forces[i] = 0.0;
-        positions[i] = 0.0;
-      }
-      break;
-    case 1:
-      Serial.println("get weight");
+      Serial.println("Weight measurement in progress");
       int counter = 0; 
       while(counter < 150){
         weight = getRawWeight();   
         counter++;
       }
       Serial.println(weight);
-      counter = 0;
 
-      inst = 10;
-      break;
-    case 2:
-      height = getBottleHeight();
-      inst = 10;
-      break;
-    case 3:
-      break;
-    case 4:
-      String str;
-      str = "weight: " + String(weight);
-      Serial.println(str);
-      str = "height: " + String(height);
-      Serial.println(str);
-      str = "dim: " + String(dim);
-      Serial.println(str);
-      for(int i=0;i<5;i++){
-        str = "Force " + String(i) + " : " + String(forces[i]);
-        Serial.println(str);
+      Serial.println("Hardness measurement in progress");
+      measuring();
+    Serial.print(endposition);
+    Serial.print("\t");
+    Serial.print(force);
+    Serial.print("\t");
+    Serial.print(diameter);
+    Serial.print("\t");
+    Serial.println(position1);
+
+
+        
       }
-      Serial.println("Positions");
-      for(int i=0;i<5;i++){
-        str = "Positions " + String(i) + " : " + String(positions[i]);
-        Serial.println(str);
-      }
-      inst = 10;
-      break;
-    case 5:
-      // to JSON and Send to ESP
-      break;
-    default:
-      Serial.println("No instruciton");
-      break;
+      
+    }
   }
-
   delay(1000);
 
 //  StaticJsonDocument<200> classifier_json;

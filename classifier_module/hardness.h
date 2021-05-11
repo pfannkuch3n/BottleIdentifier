@@ -1,16 +1,3 @@
-//Code by Reichenstein7 (thejamerson.com)
-
-//Keyboard Controls:
-//
-// 1 -Motor 1 Left
-// 2 -Motor 1 Stop
-// 3 -Motor 1 Right
-//
-// 4 -Motor 2 Left
-// 5 -Motor 2 Stop
-// 6 -Motor 2 Right
-
-// Declare L298N Dual H-Bridge Motor Controller directly since there is not a library to load.
 
 // Motor 1
 int dir1PinA = 4;
@@ -26,15 +13,24 @@ int pos = 0;
 int minpos;
 int position1;
 int endposition;
-int durchmesser;
+int diameter;
 int x=400;
 
 int force;
-void setup() {  // Setup runs once per reset
+
+void readEncoderA(){
+  int b = digitalRead(3);
+  if(b>0){
+    pos++;
+  }else{pos--;}  
+}
+
+
+void hardness_setup() {  // Setup runs once per reset
 // initialize serial communication @ 9600 baud:
 Serial.begin(9600);
 
-//Define L298N Dual H-Bridge Motor Controller Pins
+//Define Motor Controller Pins
 
 pinMode(dir1PinA,OUTPUT);
 pinMode(dir2PinA,OUTPUT);
@@ -43,19 +39,10 @@ pinMode(2, INPUT);
 pinMode(3, INPUT);
 pinMode(A0, INPUT);
 
-//pinMode(A0, INPUT_PULLUP);
-//pinMode(A1, INPUT_PULLUP);
 
 attachInterrupt(digitalPinToInterrupt(2), readEncoderA, RISING);
 
 
-}
-
-void readEncoderA(){
-  int b = digitalRead(3);
-  if(b>0){
-    pos++;
-  }else{pos--;}  
 }
 
 void setMotor(int speedSign){
@@ -113,26 +100,7 @@ void measuring(){
  setMotor(0);
 
 //Calculation of the main values
- durchmesser = x-position1-minpos;
+ diameter = x-position1-minpos;
  
    
-}
-
-void sendDatas(int endpos,int endforce, int diameter){
-  endpos=endposition;
-  endforce=force;
-  diameter=durchmesser;
-}
-
-void loop() {
-  measuring();
-    Serial.print(endposition);
-    Serial.print("\t");
-    Serial.print(force);
-    Serial.print("\t");
-    Serial.print(durchmesser);
-    Serial.print("\t");
-    Serial.println(position1);
-
-  delay(10000);
 }
