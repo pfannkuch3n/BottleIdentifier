@@ -10,13 +10,12 @@
 SoftwareSerial linkSerial(3, 1); // RX, TX
 
 const char* ssid = "esserver";
-//const char* password = "qwertyuiop";
+
 
 //WiFiServer server(80);
 
 void wifiSetup()
 {
-//Serial.begin(115200);
  
 
 }
@@ -24,7 +23,7 @@ void wifiSetup()
 void setup() {
   // Initialize "debug" serial port
   // The data rate must be much higher than the "link" serial port
-  Serial.begin(9600);
+  Serial.begin(115200);
   while (!Serial) continue;
 
   // Initialize the "link" serial port
@@ -32,7 +31,8 @@ void setup() {
   linkSerial.begin(4800);
 
 
-  WiFi.begin(ssid, NULL );
+   WiFi.begin(ssid, NULL );
+//  WiFi.begin(ssid,  );
  
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -48,51 +48,62 @@ void setup() {
 }
 
 void loop() {
+  String json;
+  
   // Check if the other Arduino is transmitting
-//  if (linkSerial.available()) 
-//  {
-//    // Allocate the JSON document
-//    // This one must be bigger than for the sender because it must store the strings
-//    StaticJsonDocument<300> bin_json;
-//
-//    // Read the JSON document from the "link" serial port
-//    DeserializationError err = deserializeJson(bin_json, linkSerial);
-//
-//    if (err == DeserializationError::Ok) 
-//    {
-//      Serial.println("Ino32");
-//      serializeJson(bin_json, Serial); // send this to server
-//      Serial.println();
-//    } 
-//    else 
-//    {
-//      // Print error to the "debug" serial port
-//      Serial.print("deserializeJson() returned ");
-//      Serial.println(err.c_str());
-//  
-//      // Flush all bytes in the "link" serial port buffer
-//      while (linkSerial.available() > 0)
-//        linkSerial.read();
-//    }
-//  }
+  if (linkSerial.available()) 
+  {
+    // Allocate the JSON document
+    // This one must be bigger than for the sender because it must store the strings
+    StaticJsonDocument<300> bin_json;
 
-  Serial.println("in the loop");
-  StaticJsonDocument<200> doc; //Create json document
-        
-    doc["userName"] = "Nameless";
-    doc["userScore"] = 1351;
+    // Read the JSON document from the "link" serial port
+    DeserializationError err = deserializeJson(bin_json, linkSerial);
+
+    if (err == DeserializationError::Ok) 
+    {
       
-     JsonArray data = doc.createNestedArray("data");
-     data.add(21);
-     data.add(2);
-    String json;
-    serializeJson(doc, json);
-    Serial.println(json);
+      serializeJson(bin_json, Serial); // send this to server
+      
+      serializeJson(bin_json, json);
+      Serial.println();
+    } 
+    else 
+    {
+      // Print error to the "debug" serial port
+      Serial.print("deserializeJson() returned ");
+      Serial.println(err.c_str());
+  
+      // Flush all bytes in the "link" serial port buffer
+      while (linkSerial.available() > 0)
+        linkSerial.read();
+    }
+  }
+
+//  Serial.println("in the loop");
+//  StaticJsonDocument<200> doc; //Create json document
+//        
+//    doc["h100"] = 123;
+//    doc["h50"] = 123;
+//    doc["percentage"] = "10%";
+//      
+//     JsonArray data = doc.createNestedArray("data");
+//     data.add(21);
+//     data.add(2);
+//    String json;
+//    serializeJson(doc, json);
+//    Serial.println(json);
+//
+
+
+
+
+
 
     HTTPClient http;
 
     // Send request
-    http.begin("http://192.168.1.101:8080/postjson");
+    http.begin("http://192.168.1.101:5001/savebin");
     http.addHeader("Content-Type", "application/json");
     int res = http.POST(json);
 
