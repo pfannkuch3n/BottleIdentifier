@@ -41,10 +41,17 @@ void weightSetup() {
 
 
 float getRawWeight() {
+  int c = 0;
+  float ret = 0.0;
+  float prev = 0.0;
+  int f =1;
+  
   static boolean newDataReady = 0;
   const int serialPrintInterval = 0; //increase value to slow down serial print activity
+  while(c<100){
+   
 
-  float ret = 0.0;
+  
   // check for new data/start next conversion:
 
   while (!LoadCell.update()) {
@@ -54,16 +61,18 @@ float getRawWeight() {
   // get smoothed value from the dataset:
  
   if (newDataReady) {
-    if (millis() > t + serialPrintInterval) {
-      float i = LoadCell.getData();
-      // Serial.print("Load_cell output val: ");
-      // Serial.println(i);
-      ret = i;
-      newDataReady = 0;
-      t = millis();
-    }
+    ret = LoadCell.getData();
+//    if ( (ret - prev) <= 1) f = 0 ;
+//    if (millis() > t + serialPrintInterval) {
+//      float i = LoadCell.getData();
+//      // Serial.print("Load_cell output val: ");
+//      // Serial.println(i);
+//      ret = i;
+//      newDataReady = 0;
+//      t = millis();
+//    }
   }
-
+  
   // receive command from serial terminal, send 't' to initiate tare operation:
 //  if (Serial.available() > 0) {
 //    char inByte = Serial.read();
@@ -71,9 +80,13 @@ float getRawWeight() {
 //  }
 
 //   check if last tare operation is complete:
-  if (LoadCell.getTareStatus() == true) {
-    Serial.println("Tare complete");
+//  if (LoadCell.getTareStatus() == true) {
+//    Serial.println("Tare complete");
+//  }
+  c++;
   }
+
+  
   return ret;
   // delay(1000);
 
@@ -101,3 +114,47 @@ float getWeight(){
 // void loop(){
 //   Serial.println(getWeight());
 // }
+
+
+float naiveGetWeight() {
+  float ret = 0.0;
+  static boolean newDataReady = 0;
+  const int serialPrintInterval = 0; //increase value to slow down serial print activity
+
+  // check for new data/start next conversion:
+  if (LoadCell.update()) newDataReady = true;
+
+  // get smoothed value from the dataset:
+  if (newDataReady) {
+    if (millis() > t + serialPrintInterval) {
+      ret = LoadCell.getData();
+//      Serial.print("Load_cell output val: ");
+//      Serial.println(i);
+      newDataReady = 0;
+      t = millis();
+    }
+  }
+
+  // receive command from serial terminal, send 't' to initiate tare operation:
+//  if (Serial.available() > 0) {
+//    char inByte = Serial.read();
+//    if (inByte == 't') LoadCell.tareNoDelay();
+//  }
+
+  // check if last tare operation is complete:
+//  if (LoadCell.getTareStatus() == true) {
+//    Serial.println("Tare complete");
+//  }
+  delay(100);
+  return ret;
+}
+
+float getBottleWeight(){
+      int counter = 0;
+      float ret =0.0; 
+      while(counter < 150){
+        ret = naiveGetWeight();
+        counter++;
+      }
+  return ret;
+}

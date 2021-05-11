@@ -11,7 +11,41 @@ void setup() {
   // put your setup code here, to run once:
   linkSerial.begin(4800);
 
-  weightSetup();
+  //weightSetup();
+
+//  Serial.begin(57600); delay(10);
+  //Serial.println();
+  Serial.println("Starting...");
+
+  LoadCell.begin();
+  float calibrationValue = -419.37; // calibration value (see example file "Calibration.ino")
+  //calibrationValue = -419.37; // uncomment this if you want to set the calibration value in the sketch
+#if defined(ESP8266)|| defined(ESP32)
+  //EEPROM.begin(512); // uncomment this if you use ESP8266/ESP32 and want to fetch the calibration value from eeprom
+#endif
+  //EEPROM.get(calVal_eepromAdress, calibrationValue); // uncomment this if you want to fetch the calibration value from eeprom
+
+  unsigned long stabilizingtime = 2000; // preciscion right after power-up can be improved by adding a few seconds of stabilizing time
+  boolean _tare = true; //set this to false if you don't want tare to be performed in the next step
+  LoadCell.start(stabilizingtime, _tare);
+  if (LoadCell.getTareTimeoutFlag()) {
+    Serial.println("Timeout, check MCU>HX711 wiring and pin designations");
+    while (1);
+  }
+  else {
+    LoadCell.setCalFactor(calibrationValue); // set calibration value (float)
+    Serial.println("Startup is complete");
+  }
+
+
+
+
+
+
+
+
+
+  
 }
 
 float getBottleHeight(){
@@ -37,7 +71,7 @@ float forces[5] = {0.00, 0.00, 0.00, 0.00, 0.00};
 float positions[5] = {0.00, 0.00, 0.00, 0.00, 0.00};
 
 
-void loop() {
+void loop2() {
   if(Serial.available()>0){
     inst = Serial.parseInt();
   }
@@ -53,15 +87,7 @@ void loop() {
       }
       break;
     case 1:
-      Serial.println("get weight");
-      int counter = 0; 
-      while(counter < 150){
-        weight = getRawWeight();   
-        counter++;
-      }
-      Serial.println(weight);
-      counter = 0;
-
+      weight = getBottleWeight();
       inst = 10;
       break;
     case 2:
