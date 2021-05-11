@@ -23,20 +23,13 @@ int inputDir;
 int higher = 100;
 
 int pos = 0;
-int prevT =0;
-float ePrev = 0;
-float eIntegral = 0;
-
-
-int position[5];
-
-
-int force[5];
-
-int maxpos;
 int minpos;
+int position1;
+int endposition;
+int durchmesser;
+int x=400;
 
-
+int force;
 void setup() {  // Setup runs once per reset
 // initialize serial communication @ 9600 baud:
 Serial.begin(9600);
@@ -83,104 +76,63 @@ analogWrite(speedPinA, abs(speedSign));//Sets speed variable via PWM
   
 }
 
-void initialize(){
-
-  setMotor(30);
-  int lastpos = pos;
-  delay(100);
-  while(lastpos != pos){
-    Serial.print(lastpos);
-    Serial.print("\t");
-    Serial.println(pos);
-    lastpos = pos;
-    delay(100);
-  }
-  maxpos = pos;
-  Serial.println(maxpos);
-  setMotor(0);
-  delay(200);
-  Serial.println("Stop");
-  setMotor(-30);
-  delay(100);
-  while(lastpos != pos){
-    Serial.print(lastpos);
-    Serial.print("\t");
-    Serial.println(pos);
-    lastpos = pos;
-    delay(100);
-  }
-  minpos = pos;
-  setMotor(0);
-  Serial.println(minpos);
-}
-
 void measuring(){
  //Start measuring with pushing forward
-
+ 
+ setMotor(-30);
+ int lastpos = pos;
+  delay(100);
+  while(lastpos != pos){
+    lastpos = pos;
+    delay(100);
+  }
+ minpos = pos;
+ setMotor(0);
+ delay(500);
+ 
  setMotor(30);
  delay(1000);
- position[0] = pos;
- force[0] = analogRead(A0);
  
-      
- setMotor(0);
- delay(500);
- setMotor(60);
- delay(400);
- position[1] = pos;
- force[1] = analogRead(A0);
+ position1 = pos;
  
  setMotor(0);
  delay(500);
- 
- setMotor(120);
- delay(400);
- position[2] = pos;
- force[2] = analogRead(A0);
- 
- setMotor(0);
- delay(500);
- 
- setMotor(180);
- delay(400);
- position[3] = pos;
- force[3] = analogRead(A0);
- 
- setMotor(0);
- delay(1000);
  
  setMotor(200);
  delay(300);
- position[4] = pos;
- force[4] = analogRead(A0);
+ 
+ endposition = pos-position1;
+ force= analogRead(A0);
 
  setMotor(0);
  delay(200);
  
  setMotor(-30);
  delay(1000);
- minpos= pos
   
  setMotor(0);
-  
+
+//Calculation of the main values
+ durchmesser = x-position1-minpos;
+ 
+   
 }
 
-void sendDatas(int positions[5],int forces[5]){
-  for( int i=0; i<5; i++){
-    positions[i]=position[i];
-    forces[i] = force[i];
-  }
+void sendDatas(int endpos,int endforce, int diameter){
+  endpos=endposition;
+  endforce=force;
+  diameter=durchmesser;
 }
 
 void loop() {
   measuring();
-  for(int i=0;i<5;i++){
-    Serial.println(i);
-    Serial.println(position[i]);
-    Serial.println(force[i]);
-    Serial.println("=========");
-  }
-  Serial.println(minpos);
+    Serial.print(endposition);
+    Serial.print("\t");
+    Serial.print(force);
+    Serial.print("\t");
+    Serial.print(durchmesser);
+    Serial.print("\t");
+    Serial.println(position1);
 
   delay(10000);
 }
