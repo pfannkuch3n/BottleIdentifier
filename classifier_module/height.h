@@ -117,7 +117,7 @@ int getHCSR(){
     // convert e
 }
 
-void getHeight(int *top, int *bottom){
-   top = getHCSR();
-   bottom = getSRF(0x74); 
+void getHeight(int *blue, int *brown){
+   *blue = getHCSR();
+   *brown = getSRF(0x71); 
 }
