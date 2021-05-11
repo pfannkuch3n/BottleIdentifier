@@ -1,0 +1,41 @@
+{% include 'incl/header.html' %}
+
+<!-- <h2>Add a person</h2>
+<form action="/save" method="POST">
+  <table>
+    <tr><td>Name: </td><td><input name="name"></td></tr>
+    <tr><td>Email: </td><td><input name="email"></td></tr>
+    <tr><td>ID: </td><td><input name="idnum"></td></tr>
+  </table>
+<input type="submit" value="Save">
+</form>
+
+<h2>List people by name</h2>
+<form action="/get" method="POST">
+Name: <input name="name">
+<input type="submit" value="Get">
+</form>
+
+{% if error %}
+<div style="color:red;">
+  {{ error }}
+</div>
+{% endif %} -->
+
+<h2> Bin Module </h2>
+<ul>
+  {% for i in bItems %}
+   <li>Status: {{ i.status }}, height_50: {{ i.h50 }}, Height_100: {{ i.h100 }}</li>
+  {% endfor %}
+</ul>
+
+<h2> Classifier Module </h2>
+<ul>
+  {% for i in cItems %}
+   <li>weight: {{ i.status }}, height: {{ i.height }}, dimension: {{ i.dim }} </li>
+   <li>forces: {{ i.forces }} </li>
+   <li>position: {{ i.positions}} </li>
+   <br>
+  {% endfor %}
+</ul>
+{% include 'incl/footer.html' %}
