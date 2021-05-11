@@ -1,5 +1,6 @@
 #include "height.h"
 #include "weight.h"
+#include "hardness.h"
 #include <SoftwareSerial.h>
 #include <math.h>
 
@@ -10,42 +11,11 @@ void setup() {
    Serial.begin(9600);
   // put your setup code here, to run once:
   linkSerial.begin(4800);
+  pinMode(A2, INPUT); //FSR sensor to detect if the lid is closed or not
+  pinMode(7, INPUT_PULLUP); //Button to start the measurement if lid is closed
+  weightSetup();
 
-  //weightSetup();
-
-//  Serial.begin(57600); delay(10);
-  //Serial.println();
-  Serial.println("Starting...");
-
-  LoadCell.begin();
-  float calibrationValue = -419.37; // calibration value (see example file "Calibration.ino")
-  //calibrationValue = -419.37; // uncomment this if you want to set the calibration value in the sketch
-#if defined(ESP8266)|| defined(ESP32)
-  //EEPROM.begin(512); // uncomment this if you use ESP8266/ESP32 and want to fetch the calibration value from eeprom
-#endif
-  //EEPROM.get(calVal_eepromAdress, calibrationValue); // uncomment this if you want to fetch the calibration value from eeprom
-
-  unsigned long stabilizingtime = 2000; // preciscion right after power-up can be improved by adding a few seconds of stabilizing time
-  boolean _tare = true; //set this to false if you don't want tare to be performed in the next step
-  LoadCell.start(stabilizingtime, _tare);
-  if (LoadCell.getTareTimeoutFlag()) {
-    Serial.println("Timeout, check MCU>HX711 wiring and pin designations");
-    while (1);
-  }
-  else {
-    LoadCell.setCalFactor(calibrationValue); // set calibration value (float)
-    Serial.println("Startup is complete");
-  }
-
-
-
-
-
-
-
-
-
-  
+  hardness_setup();
 }
 
 float getBottleHeight(){
@@ -67,11 +37,67 @@ float getBottleHeight(){
 
 int inst = 0;
 float weight, height, dim;
-float forces[5] = {0.00, 0.00, 0.00, 0.00, 0.00};
-float positions[5] = {0.00, 0.00, 0.00, 0.00, 0.00};
 
 
-void loop2() {
+
+void loop() {
+  if(analogRead(A2)>50){
+    if(!digitalRead(7)){
+      if(getRawWeight()<5){
+        Serial.println("please place a bottle");
+      }else{
+      Serial.println("Height measurement in progress");
+      height = getBottleHeight();
+      delay(1000);
+
+      Serial.println("Weight measurement in progress");
+      int counter = 0; 
+      while(counter < 150){
+        weight = getRawWeight();   
+        counter++;
+      }
+      Serial.println(weight);
+
+      Serial.println("Hardness measurement in progress");
+      measuring();
+    Serial.print(endposition);
+    Serial.print("\t");
+    Serial.print(force);
+    Serial.print("\t");
+    Serial.print(diameter);
+    Serial.print("\t");
+    Serial.println(position1);
+
+
+        
+      }
+      
+    }
+  }
+  delay(1000);
+
+//  StaticJsonDocument<200> classifier_json;
+//  classifier_json["height"] = len_box - h_blue_cm;
+    // Convert to JSON
+
+//  
+//  classifier_json["hostname"] = "classifer";
+//  classifier_json["weight"] = abs(*h_top - *h_bottom);
+//  classifier_json["hardness"] = "100.00";
+//  classifier_json["weight"] = "1.00";
+
+
+  // Send Post request to backend 
+  //serializeJson(classifier_json, Serial); // send this to server
+  //Serial.println();
+
+  //Send data to ESP
+  // serializeJson(classifier_json, linkSerial); 
+
+
+}
+
+void debugLoop() {
   if(Serial.available()>0){
     inst = Serial.parseInt();
   }
@@ -112,36 +138,3 @@ void loop2() {
       for(int i=0;i<5;i++){
         str = "Positions " + String(i) + " : " + String(positions[i]);
         Serial.println(str);
-      }
-      inst = 10;
-      break;
-    case 5:
-      // to JSON and Send to ESP
-      break;
-    default:
-      Serial.println("No instruciton");
-      break;
-  }
-
-  delay(1000);
-
-//  StaticJsonDocument<200> classifier_json;
-//  classifier_json["height"] = len_box - h_blue_cm;
-    // Convert to JSON
-
-//  
-//  classifier_json["hostname"] = "classifer";
-//  classifier_json["weight"] = abs(*h_top - *h_bottom);
-//  classifier_json["hardness"] = "100.00";
-//  classifier_json["weight"] = "1.00";
-
-
-  // Send Post request to backend 
-  //serializeJson(classifier_json, Serial); // send this to server
-  //Serial.println();
-
-  //Send data to ESP
-  // serializeJson(classifier_json, linkSerial); 
-
-
-}
