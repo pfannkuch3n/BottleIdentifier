@@ -19,10 +19,13 @@ int x=400;
 int force;
 
 void readEncoderA(){
+  Serial.println(pos);
   int b = digitalRead(3);
   if(b>0){
     pos++;
-  }else{pos--;}  
+  }else{pos--;} 
+  Serial.println(pos); 
+  Serial.println();
 }
 
 
@@ -40,7 +43,7 @@ pinMode(3, INPUT);
 pinMode(A0, INPUT);
 
 
-attachInterrupt(digitalPinToInterrupt(2), readEncoderA, RISING);
+//attachInterrupt(digitalPinToInterrupt(2), readEncoderA, RISING);
 
 
 }
@@ -67,12 +70,7 @@ void measuring(){
  //Start measuring with pushing forward
  
  setMotor(-30);
- int lastpos = pos;
-  delay(100);
-  while(lastpos != pos){
-    lastpos = pos;
-    delay(100);
-  }
+ delay(1000);
  minpos = pos;
  setMotor(0);
  delay(500);
@@ -82,12 +80,13 @@ void measuring(){
  
  position1 = pos;
  
- setMotor(0);
+ setMotor(-22);
  delay(500);
  
  setMotor(200);
- delay(300);
- 
+ delay(500);
+ Serial.println("Before endpo");
+ Serial.println(pos);
  endposition = pos-position1;
  force= analogRead(A0);
 

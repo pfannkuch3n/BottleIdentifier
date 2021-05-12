@@ -16,6 +16,7 @@ void setup() {
   weightSetup();
 
   hardness_setup();
+  attachInterrupt(digitalPinToInterrupt(2), readEncoderA, RISING);
 }
 
 float getBottleHeight(){
@@ -37,13 +38,15 @@ float getBottleHeight(){
 
 int inst = 0;
 float weight, height, dim;
+float forces[5], positions[5];
 
 
-
-void loop() {
+void autoLoop() {
   if(analogRead(A2)>50){
+    Serial.println("Lid is closed");
     if(!digitalRead(7)){
-      if(getRawWeight()<5){
+      Serial.println("Measurements are starting");
+      if(getBottleWeight()<5){
         Serial.println("please place a bottle");
       }else{
       Serial.println("Height measurement in progress");
@@ -51,11 +54,7 @@ void loop() {
       delay(1000);
 
       Serial.println("Weight measurement in progress");
-      int counter = 0; 
-      while(counter < 150){
-        weight = getRawWeight();   
-        counter++;
-      }
+      weight = getBottleWeight();   
       Serial.println(weight);
 
       Serial.println("Hardness measurement in progress");
@@ -97,44 +96,51 @@ void loop() {
 
 }
 
-void debugLoop() {
-  if(Serial.available()>0){
-    inst = Serial.parseInt();
-  }
 
-  switch(inst){
-    case 0:
-      weight = 0.0;
-      height = 0.0;
-      dim = 0.0;
-      for(int i=0;i<5;i++){
-        forces[i] = 0.0;
-        positions[i] = 0.0;
-      }
-      break;
-    case 1:
-      weight = getBottleWeight();
-      inst = 10;
-      break;
-    case 2:
-      height = getBottleHeight();
-      inst = 10;
-      break;
-    case 3:
-      break;
-    case 4:
-      String str;
-      str = "weight: " + String(weight);
-      Serial.println(str);
-      str = "height: " + String(height);
-      Serial.println(str);
-      str = "dim: " + String(dim);
-      Serial.println(str);
-      for(int i=0;i<5;i++){
-        str = "Force " + String(i) + " : " + String(forces[i]);
-        Serial.println(str);
-      }
-      Serial.println("Positions");
-      for(int i=0;i<5;i++){
-        str = "Positions " + String(i) + " : " + String(positions[i]);
-        Serial.println(str);
+//void debugLoop() {
+//  if(Serial.available()>0){
+//    inst = Serial.parseInt();
+//  }
+//
+//  switch(inst){
+//    case 0:
+//      weight = 0.0;
+//      height = 0.0;
+//      dim = 0.0;
+//      for(int i=0;i<5;i++){
+//        forces[i] = 0.0;
+//        positions[i] = 0.0;
+//      }
+//      break;
+//    case 1:
+//      weight = getBottleWeight();
+//      inst = 10;
+//      break;
+//    case 2:
+//      height = getBottleHeight();
+//      inst = 10;
+//      break;
+//    case 3:
+//      break;
+//    case 4:
+//      String str;
+//      str = "weight: " + String(weight);
+//      Serial.println(str);
+//      str = "height: " + String(height);
+//      Serial.println(str);
+//      str = "dim: " + String(dim);
+//      Serial.println(str);
+//      for(int i=0;i<5;i++){
+//        str = "Force " + String(i) + " : " + String(forces[i]);
+//        Serial.println(str);
+//      }
+//      Serial.println("Positions");
+//      for(int i=0;i<5;i++){
+//        str = "Positions " + String(i) + " : " + String(positions[i]);
+//        Serial.println(str);
+//      }
+
+void loop(){
+  autoLoop();
+  // debugLoop();
+}
