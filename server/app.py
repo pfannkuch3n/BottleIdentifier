@@ -26,7 +26,7 @@ db = client["demo"]
 def main():
     bItems = getBin()
     cItems = getClassifier()
-    print (type(bItems),flush=True)
+    print (cItems,flush=True)
     return render_template('main.html', bItems=bItems, cItems=cItems)
 
 @app.route("/clear", methods=['GET'])
@@ -68,7 +68,7 @@ def saveClassifier():
         "weight": content['weight'],
         "height": content['height'],
         "diameter": content['diameter'],
-        "forces": content['force'],
+        "force": content['force'],
         "position1": content['position1'],
         "endposition": content['endposition'],
         "time": datetime.datetime.now(),
