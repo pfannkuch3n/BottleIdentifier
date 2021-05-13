@@ -3,6 +3,7 @@ import pymongo
 import datetime
 import sys
 import json
+import subprocess
 
 sys.stdout.flush()
 
@@ -129,7 +130,15 @@ def getClassifier():
         # ret = zip(tmp[0]['positions'],tmp[0]['forces'])
         # print (zip(tmp[0]['positions'],tmp[0]['forces']), flush=True)
     return items
- 
+
+@app.route("/prediction", methods=['GET'])
+def prediction():
+    command = "python3 ./prediction.py %s %s" % ("1.1", "2.2")
+    try:
+        result_success = subprocess.check_output([command], shell=True)
+    except subprocess.CalledProcessError as e:
+        return "predition Error"
+    return '%s' % (result_success.decode('utf-8').split()[0])
 # @app.route("/list", methods=['GET'])
 # def list_people():
 #     count = db.people.count_documents({})

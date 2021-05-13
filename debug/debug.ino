@@ -129,20 +129,6 @@ void loop() {
       position1 = 1;
       endposition = 1;
       inst = 5;
- 
-      String str;
-      str = "weight: " + String(weight);
-      Serial.println(str);
-      str = "height: " + String(height);
-      Serial.println(str);
-      str = "dim: " + String(diameter);
-      Serial.println(str);
-      str = "force: " + String(force);
-      Serial.println(str);
-      str = "pos1: " + String(position1);
-      Serial.println(str);
-      str = "endpos: " + String(endposition);
-      Serial.println(str);
    
     send2ESP();
     //delay(5000);
