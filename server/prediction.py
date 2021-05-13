@@ -1,6 +1,6 @@
 #!/bin/python3
 import sys
-
+import tensorflow
 '''
     Get variable 
     weight = sys.argv[1];
