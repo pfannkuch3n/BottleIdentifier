@@ -66,9 +66,10 @@ def saveClassifier():
     entry = {
         "weight": content['weight'],
         "height": content['height'],
-        "dim": content['dim'],
-        "forces": content['forces'],
-        "positions": content['positions'],
+        "diameter": content['diameter'],
+        "forces": content['force'],
+        "position1": content['position1'],
+        "endposition": content['endposition'],
         "time": datetime.datetime.now(),
         "id": rid
     }
@@ -76,7 +77,8 @@ def saveClassifier():
     res = db.classifier_module.insert(entry)
     db.classifier_module.create_index("id", unique=True)
 
-    return "send from classifier"
+    # Run predition
+    return "g"
 
 
 
@@ -120,12 +122,12 @@ def getBin():
 
 def getClassifier():
     items = list(db.classifier_module.find().sort('id', -1).limit(3))
-    if items:
-        print (items, flush=True)
-        tmp = list(items)
-        print ("tmp :::: ", flush=True)
-        ret = zip(tmp[0]['positions'],tmp[0]['forces'])
-        print (zip(tmp[0]['positions'],tmp[0]['forces']), flush=True)
+    # if items:
+        # print (items, flush=True)
+        # tmp = list(items)
+        # print ("tmp :::: ", flush=True)
+        # ret = zip(tmp[0]['positions'],tmp[0]['forces'])
+        # print (zip(tmp[0]['positions'],tmp[0]['forces']), flush=True)
     return items
  
 # @app.route("/list", methods=['GET'])
