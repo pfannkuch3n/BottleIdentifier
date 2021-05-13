@@ -7,6 +7,8 @@ SoftwareSerial linkSerial(16,17);  // RX, TX
 
 const char* ssid = "esserver";
 String  pred_val = "";
+uint8_t state = 0;
+  String json;
 
 
 void setup() {
@@ -26,8 +28,11 @@ void setup() {
   Serial.println("Connected to the WiFi network");
 }
 
+void changeLED(){
+  //Serial.println(state);
+}
+
 void loop() { 
-  String json;
 
   // Check if the other Arduino is transmitting
   if (linkSerial.available()) {
@@ -36,8 +41,14 @@ void loop() {
 
     DeserializationError err = deserializeJson(c_json, linkSerial);
 
-    if (err == DeserializationError::Ok) {
-      serializeJson(c_json, Serial);  // send this to server
+    println(err);
+    serializeJson(c_json, Serial);  
+    state = c_json['state'];
+
+
+    if (err == DeserializationError::Ok && state == 2) {
+      changeLED(); // Chanage LED for state 2 (Green)
+      serializeJson(c_json, Serial);  
       serializeJson(c_json, json);
 
     // Create connection & send data to server
@@ -46,19 +57,23 @@ void loop() {
     http.begin("http://192.168.1.101:5001/saveclassifier");
     http.addHeader("Content-Type", "application/json");
     int res = http.POST(json);
-    
+    delay(3000);
     pred_val = http.getString();
     http.end();
-
+    Serial.println(pred_val);
     // return prediction value
+    linkSerial.flush();
     linkSerial.print(pred_val);
 
     delay(100);
-
+    state = 0;
     } else {
       Serial.print("deserializeJson() returned ");
       Serial.println(err.c_str());
       while (linkSerial.available() > 0) linkSerial.read();
     }
+    
   }
+
+  changeLED();
 }
