@@ -103,9 +103,12 @@ void loop() {
         Serial.println("Hardness measurement in progress");
         measuring();
 
+<<<<<<< HEAD
+=======
         state = 2;
         send2ESP();
         
+>>>>>>> 51d96ec5fdf9331defd3dc72002c6b21df0650ef
         recvFromESP();
         state = 0;
       }
@@ -121,4 +124,6 @@ void loop() {
   }
   send2ESP();
   delay(1000);
+          send2ESP();
+
 }
