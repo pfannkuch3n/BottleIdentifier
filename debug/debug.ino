@@ -61,34 +61,14 @@ void send2ESP() {
   delay(1000);
 }
 
-int recvFromESP() {
+void recvFromESP() {
   String json = "";
   if (linkSerial.available()) {
-//      Serial.println("link available");
-//      StaticJsonDocument<300> r_json;
-//      DeserializationError err = deserializeJson(r_json, linkSerial);
-//      if (err == DeserializationError::Ok){
-//        serializeJson(r_json, Serial);  // send this to server
-//        serializeJson(r_json, json);
-//      }
-//      else {
-//      // Print error to the "debug" serial port
-//      Serial.print("deserializeJson() returned ");
-//      Serial.println(err.c_str());
-//
-//      // Flush all bytes in the "link" serial port buffer
-//      while (linkSerial.available() > 0) linkSerial.read();
-//      }
-      Serial.println(linkSerial.read());
+      json = linkSerial.readStringUntil('%');
     }
-  
-  Serial.println("Recv func");
-  //char x = linkSerial.read();
-  
+
+  Serial.println(json);
   linkSerial.flush();
-//  if (json == "g") return 1;
-//  if (json == "p") return 0;
-  return 2;  // return error
 }
 
 
@@ -171,12 +151,12 @@ void loop() {
       str = "endpos: " + String(endposition);
       Serial.println(str);
    
-    //send2ESP();
+    send2ESP();
     //delay(5000);
     //while(flag){
-    Serial.println(recvFromESP());
+    recvFromESP();
     //}
-    delay(1000);
+    delay(2000);
 
 
 }
