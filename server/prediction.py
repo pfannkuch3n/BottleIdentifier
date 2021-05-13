@@ -1,9 +1,12 @@
 #!/bin/python3
+
 import sys
-import tensorflow as tf
 import os
 
-#
+import tensorflow as tf
+
+os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
+
 #Variables
 
 #Path to local repository
@@ -14,19 +17,20 @@ PathToRep= "/home/leon/"
     weight = sys.argv[1];
 '''
 # print ('Argument List:', str(sys.argv[1]))
-print (str(sys.argv[0]))
+#print (str(sys.argv[0]))
 PathToFile= PathToRep + "/BottleIdentifier/server/Prediction_module/model.pb"
+
 
 prediction_model = tf.keras.models.load_model(PathToFile)
 
 
 #Values for the prediction 20.80,21.33,5.94,366,42.00,68.00
 
-height = 15
-weight= 200
-diameter=7
-force=400
-deformation=15
+height = float(sys.argv[1])
+weight= float(sys.argv[2])
+diameter=float(sys.argv[3])
+force=float(sys.argv[4])
+deformation=float(sys.argv[5])
 
 #Data pre-processing
 
@@ -37,6 +41,7 @@ if height >34:
 	height=30
 
 WeightByScale=weight/(height*diameter)
+
 #Convert variables on a scale from 0-10
 if force>700:
 	force=700
@@ -50,14 +55,14 @@ if WeightByScale>2.2:
 	WeightByScale=2.2
 WeightByScale= (WeightByScale/2.2)*10
 
-print("force: ", force, "deformation: ", deformation,"WeightByScale: ", WeightByScale)
+#print("force: ", force, "deformation: ", deformation,"WeightByScale: ", WeightByScale)
 
 #Prediction
 import pandas as pd
 data= pd.DataFrame([[force,deformation,WeightByScale]])
 prediction = prediction_model.predict(data)
 
-print(prediction)
+#print(prediction)
 if prediction[0][0]>prediction[0][1]:
 	print("Glas Bottle")
 else:
