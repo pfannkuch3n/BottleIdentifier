@@ -93,10 +93,10 @@ void loop() {
 
         delay(1000);
         Serial.println("Height measurement in progress");
-        height = int(getBottleHeight());
+        height = getBottleHeight();
 
         Serial.println("Weight measurement in progress");
-        weight = int(getBottleWeight());
+        weight = getBottleWeight();
         Serial.println(weight);
 
         Serial.println("Hardness measurement in progress");
