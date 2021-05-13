@@ -78,7 +78,7 @@ def saveClassifier():
     db.classifier_module.create_index("id", unique=True)
 
     # Run predition
-    return "g"
+    return "Plastic"
 
 
 
