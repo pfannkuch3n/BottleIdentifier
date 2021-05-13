@@ -16,24 +16,17 @@ bool flag = true;
 void setup() {
   Wire.begin();
   Serial.begin(9600);
-  // put your setup code here, to run once:
-  pinMode(10, INPUT);
-pinMode(11, OUTPUT);
+
   linkSerial.begin(4800);
+
   pinMode(A2, INPUT);        // FSR sensor to detect if the lid is closed or not
   pinMode(7, INPUT_PULLUP);  // Button to start the measurement if lid is closed
 
   weightSetup();
-
-
-
-
   hardness_setup();
- 
   attachInterrupt(digitalPinToInterrupt(2), readEncoderA, RISING);
+
   Serial.println("All Setup Complete");
-
-
 }
 
 float getBottleHeight() {
