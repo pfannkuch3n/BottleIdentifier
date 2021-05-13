@@ -24,5 +24,12 @@ print (items)
     Get variable 
     weight = sys.argv[1];
 '''
-# print ('Argument List:', str(sys.argv[1]))
+
+raw_data = list(sys.argv[1:6])
+# col_name = list("height", "weight", "diameter", "force", "endposition")
+
+data = pd.DataFrame(raw_data, columns = ["height", "weight", "diameter", "force", "endposition"])
+print ('Argument List:', str(sys.argv[1]))
 print (str(sys.argv[0]))
+print (str(sys.argv[1]))
+print (str(sys.argv[2]))
