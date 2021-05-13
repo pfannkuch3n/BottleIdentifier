@@ -1,146 +1,105 @@
-#include "height.h"
-#include "weight.h"
-#include "hardness.h"
 #include <SoftwareSerial.h>
+#include <ArduinoJson.h>
+
 #include <math.h>
 
-SoftwareSerial linkSerial(0, 1); // RX, TX
+#include "hardness.h"
+#include "height.h"
+#include "weight.h"
 
-void setup() {
-  Wire.begin();                
-   Serial.begin(9600);
-  // put your setup code here, to run once:
-  linkSerial.begin(4800);
-  pinMode(A2, INPUT); //FSR sensor to detect if the lid is closed or not
-  pinMode(7, INPUT_PULLUP); //Button to start the measurement if lid is closed
-  weightSetup();
-
-  hardness_setup();
-  attachInterrupt(digitalPinToInterrupt(2), readEncoderA, RISING);
-}
-
-float getBottleHeight(){
- //i2cScanner();
-  int h_blue, h_brown;
-  //getHeight(&h_blue, &h_brown);
-  //Serial.println(*h_top);
-  //Serial.println(*h_bottom);
-  h_blue = getHCSR();
-  //i2cScanner();
-  double len_box = 34.0;
-  // Serial.println("SRF");
-  // Serial.println(h_brown); 
-  // Serial.println("HCSR");
-  // Serial.println(h_blue/10.0);
-   Serial.println(len_box-(h_blue/10.0));
-  return len_box - (h_blue/10.0);
-}
+SoftwareSerial linkSerial(10, 11);  // RX, TX
 
 int inst = 0;
-float weight, height, dim;
-float forces[5], positions[5];
+float weight, height;
+bool flag = true;
 
+void setup() {
+  Wire.begin();
+  Serial.begin(9600);
 
-void autoLoop() {
-  if(analogRead(A2)>50){
+  linkSerial.begin(4800);
+
+  pinMode(A2, INPUT);        // FSR sensor to detect if the lid is closed or not
+  pinMode(7, INPUT_PULLUP);  // Button to start the measurement if lid is closed
+
+  weightSetup();
+  hardness_setup();
+  attachInterrupt(digitalPinToInterrupt(2), readEncoderA, RISING);
+
+  Serial.println("All Setup Complete");
+}
+
+float getBottleHeight() {
+  int h_blue, h_brown;
+  h_blue = getHCSR();
+  double len_box = 34.0;
+  return len_box - (h_blue / 10.0);
+}
+
+void send2ESP() {
+  // Convert to JSON
+  //  classifier_json["hostname"] = "classifer";
+  StaticJsonDocument<300> classifier_json;
+  classifier_json["weight"] = weight;
+  classifier_json["height"] = height;
+  classifier_json["diameter"] = diameter;
+  classifier_json["force"] = force;
+  classifier_json["endposition"] = endposition;
+  classifier_json["position1"] = position1;
+  Serial.print(height);
+  Serial.print(",");
+  Serial.print(weight);
+  Serial.print(",");
+  Serial.print(diameter);
+  Serial.print(",");
+  Serial.print(force);
+  Serial.print(",");
+  Serial.print(endposition);
+  Serial.print(",");
+  Serial.print(position1);
+  Serial.print(",");
+  Serial.println("glas");
+  // Send Post request to backend
+  serializeJson(classifier_json, Serial);  // send this to server
+  serializeJson(classifier_json, linkSerial);  // send this to server
+  Serial.println();
+  Serial.println("Send Complete");
+  delay(1000);
+}
+
+void recvFromESP() {
+  String json = "";
+  if (linkSerial.available()) {
+      json = linkSerial.readStringUntil('%');
+    }
+
+  Serial.println(json);
+  linkSerial.flush();
+}
+
+void loop() {
+  if (analogRead(A2) > 50) {
     Serial.println("Lid is closed");
-    if(!digitalRead(7)){
+    if (!digitalRead(7)) {
       Serial.println("Measurements are starting");
-      if(getBottleWeight()<5){
+      if (getBottleWeight() < 5) {
         Serial.println("please place a bottle");
-      }else{
-      Serial.println("Height measurement in progress");
-      height = getBottleHeight();
-      delay(1000);
+      } else {
+        Serial.println("Height measurement in progress");
+        height = getBottleHeight();
+        delay(1000);
 
-      Serial.println("Weight measurement in progress");
-      weight = getBottleWeight();   
-      Serial.println(weight);
+        Serial.println("Weight measurement in progress");
+        weight = getBottleWeight();
+        Serial.println(weight);
 
-      Serial.println("Hardness measurement in progress");
-      measuring();
-    Serial.print(endposition);
-    Serial.print("\t");
-    Serial.print(force);
-    Serial.print("\t");
-    Serial.print(diameter);
-    Serial.print("\t");
-    Serial.println(position1);
+        Serial.println("Hardness measurement in progress");
+        measuring();
 
-
-        
+        send2ESP();
+        recvFromESP();
       }
-      
     }
   }
   delay(1000);
-
-//  StaticJsonDocument<200> classifier_json;
-//  classifier_json["height"] = len_box - h_blue_cm;
-    // Convert to JSON
-
-//  
-//  classifier_json["hostname"] = "classifer";
-//  classifier_json["weight"] = abs(*h_top - *h_bottom);
-//  classifier_json["hardness"] = "100.00";
-//  classifier_json["weight"] = "1.00";
-
-
-  // Send Post request to backend 
-  //serializeJson(classifier_json, Serial); // send this to server
-  //Serial.println();
-
-  //Send data to ESP
-  // serializeJson(classifier_json, linkSerial); 
-
-
-}
-
-
-//void debugLoop() {
-//  if(Serial.available()>0){
-//    inst = Serial.parseInt();
-//  }
-//
-//  switch(inst){
-//    case 0:
-//      weight = 0.0;
-//      height = 0.0;
-//      dim = 0.0;
-//      for(int i=0;i<5;i++){
-//        forces[i] = 0.0;
-//        positions[i] = 0.0;
-//      }
-//      break;
-//    case 1:
-//      weight = getBottleWeight();
-//      inst = 10;
-//      break;
-//    case 2:
-//      height = getBottleHeight();
-//      inst = 10;
-//      break;
-//    case 3:
-//      break;
-//    case 4:
-//      String str;
-//      str = "weight: " + String(weight);
-//      Serial.println(str);
-//      str = "height: " + String(height);
-//      Serial.println(str);
-//      str = "dim: " + String(dim);
-//      Serial.println(str);
-//      for(int i=0;i<5;i++){
-//        str = "Force " + String(i) + " : " + String(forces[i]);
-//        Serial.println(str);
-//      }
-//      Serial.println("Positions");
-//      for(int i=0;i<5;i++){
-//        str = "Positions " + String(i) + " : " + String(positions[i]);
-//        Serial.println(str);
-//      }
-
-void loop(){
-  autoLoop();
-  // debugLoop();
 }
