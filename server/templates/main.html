@@ -32,10 +32,13 @@ Name: <input name="name">
 <h2> Classifier Module </h2>
 <ul>
   {% for i in cItems %}
-   <li>weight: {{ i.weight }}, height: {{ i.height }}, diameter : {{ i.diameter }} </li>
-   <li>forces: {{ i.force }} </li>
+   <li>weight: {{ '%0.2f'| format(i.weight)|float  }} grams, {{ '%0.2f'| format(i.weight*0.035274)|float }} oz</li>
+   <li>height: {{ i.height }} cm., {{ '%0.2f' | format(i.height*0.393701)|float}} inches </li>
+   <li>diameter: {{ i.diameter }} cm.,  {{ '%0.2f' | format(i.height*0.393701)|float}} inches </li>
+   <li>force: {{ i.force }} </li>
    <li>position1: {{ i.position1}} </li>
    <li>endposition: {{ i.endposition}} </li>
+   <li>Prediction: {{ i.position1 }} </li>
    <br>
   {% endfor %}
 </ul>

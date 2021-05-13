@@ -66,9 +66,11 @@ def saveClassifier():
 
     # Call predition
 
-    ret = prediction();
-    if(ret == "g") return "Glass"
-    if(ret == "p") return "Plastic"
+    ret = prediction()
+    if(ret == "g") :
+        return "Glass"
+    if(ret == "p") :
+        return "Plastic"
     return "Undefine"
 
 
