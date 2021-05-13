@@ -12,7 +12,7 @@ void setup() {
 }
 
 bool isEmpty(int value){
-  int e_val = 1;
+  int e_val = 2;
   if ((value <= 13-e_val) || (value >= 13+e_val))
     return 1; // Acceptable, Nothing puting the box
   return 0;

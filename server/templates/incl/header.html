@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script type = "text/JavaScript">
+        <!--
+           function AutoRefresh( t ) {
+              setTimeout("location.reload(true);", t);
+           }
+        //-->
+     </script>
 </head>
-<body>
-<h1>Flask + MongoDB</h1>
-<a href="/">home</a> <a href="/list">list</a>
+
+<body onload = "JavaScript:AutoRefresh(2000);" >
+<h1>Bottle Identifier</h1>
