@@ -84,12 +84,13 @@ void loop() {
     state=1;
     send2ESP();
     if (!digitalRead(7)) {
+         state = 2;
+        send2ESP();
       Serial.println("Measurements are starting");
       if (getBottleWeight() < 5) {
         Serial.println("please place a bottle");
       } else {
-        state = 2;
-        send2ESP();
+
         delay(1000);
         Serial.println("Height measurement in progress");
         height = getBottleHeight();
