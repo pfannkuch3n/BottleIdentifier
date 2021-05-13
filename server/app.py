@@ -4,6 +4,7 @@ import datetime
 import sys
 import json
 import subprocess
+from prediction import *
 
 sys.stdout.flush()
 
@@ -49,7 +50,17 @@ def saveClassifier():
     counterObj = db.counters.find_one({"_id": "cid"})
     rid = counterObj['sequence_value']
 
-    
+    # Call Prediction
+    ret = ""
+    # try:
+    ret = tfPrediction(float(content['height']), float(content['weight']), float(content['diameter']), int(content['force']), int(content['endposition']))
+    print(ret)
+    # ret = tfPrediction(16.3,216.16,6.255,478,13);	
+    # print (ret)
+    # except:
+        # ret = ""
+
+    # Save to DB
     entry = {
         "weight": content['weight'],
         "height": content['height'],
@@ -57,6 +68,7 @@ def saveClassifier():
         "force": content['force'],
         "position1": content['position1'],
         "endposition": content['endposition'],
+        "prediction": ret,
         "time": datetime.datetime.now(),
         "id": rid
     }
@@ -64,14 +76,10 @@ def saveClassifier():
     res = db.classifier_module.insert(entry)
     db.classifier_module.create_index("id", unique=True)
 
-    # Call predition
+    if (ret == ""):
+         return "Error"
+    return str(ret)
 
-    ret = prediction()
-    if(ret == "g") :
-        return "Glass"
-    if(ret == "p") :
-        return "Plastic"
-    return "Undefine"
 
 
 
