@@ -96,10 +96,11 @@ void loop() {
         Serial.println("Hardness measurement in progress");
         measuring();
 
-        send2ESP();
         recvFromESP();
       }
     }
   }
   delay(1000);
+          send2ESP();
+
 }
