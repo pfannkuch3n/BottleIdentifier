@@ -10,22 +10,23 @@ int inputDir;
 int higher = 100;
 
 int pos = 0;
-int minpos;
-int position1;
-int endposition;
-int diameter;
-int x=400;
+float minpos;
+float position1;
+float endposition;
+float diameter;
+float DISTANCETOBOX=9;
+float CONVERSIONTOCM =0.045;
 
 int force;
 
 void readEncoderA(){
-  Serial.println(pos);
+  //Serial.println(pos);
   int b = digitalRead(3);
   if(b>0){
     pos++;
   }else{pos--;} 
-  Serial.println(pos); 
-  Serial.println();
+ // Serial.println(pos); 
+ // Serial.println();
 }
 
 
@@ -72,34 +73,36 @@ void measuring(){
  setMotor(-30);
  delay(1000);
  minpos = pos;
+ Serial.println(minpos);
  setMotor(0);
  delay(500);
  
- setMotor(30);
+ setMotor(35);
  delay(1000);
  
  position1 = pos;
- 
+ Serial.println(position1);
+ delay(100);
  setMotor(-22);
  delay(500);
  
  setMotor(200);
  delay(500);
- Serial.println("Before endpo");
- Serial.println(pos);
+ //Serial.println("Before endpo");
+ //Serial.println(pos);
  endposition = pos-position1;
  force= analogRead(A0);
 
  setMotor(0);
  delay(200);
  
- setMotor(-30);
+ setMotor(-35);
  delay(1000);
   
  setMotor(0);
 
 //Calculation of the main values
- diameter = x-position1-minpos;
+ diameter = DISTANCETOBOX-CONVERSIONTOCM*(position1-minpos);
  
    
 }
