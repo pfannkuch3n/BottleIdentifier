@@ -48,5 +48,5 @@ There are two communication in this module. (Serial communication between ATMeag
 
 All of the communication pack the data in JSON format and send to the receiver.
 
-![](pic/bin<width="50">)
-![](pic/bin2)
+![](pic/bin.jpg)
+![](pic/bin2.jpg)
