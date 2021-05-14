@@ -13,7 +13,12 @@ Project as part of an embedded Software class. The objective is a machine that c
 ![](pic/classifier.jpg)
 
 ### Userinterface 
+Prints out:
+- All by the height, weight and hardness sensor obtained values
+- Bin capacity status
+- Prediction result
 
+![](pic/web.png)
 
 ### Hardness Measurement
 
