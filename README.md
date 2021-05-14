@@ -10,7 +10,7 @@ Project as part of an embedded Software class. The objective is a machine that c
 ---
 
 ## Classifier module
-![](pic/IMG_3335.JPG)
+![](pic/classifier.jpg)
 
 ### Userinterface 
 
