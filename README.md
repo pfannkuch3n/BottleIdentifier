@@ -21,18 +21,32 @@ Prints out:
 ![](pic/web.png)
 
 ### Hardness Measurement
+A DC Motor pushes over a linear translation against the bottle. A force sensitive resistor at the top can obtain the pressure and
+the DC Motor encoder enables to track the position. The measurement is conducted in five steps:
+1. Find the zero position
+2. Push with the minimum force against the bottle and save the position
+3. Pull back for a short term
+4. Push with 80% of the possible power from the DC motor against the bottle and save the measured force and position
 
-
+Three Values can be obtained in this process:
+- The diameter by substracting the first position with the zero position
+- The deformation of the bottle by substracting the end position in step 4. with the first position
+- The force that pushs against the bottle at 80% power
+ 
+![](pic/hardness.jpg)
 
 ### Weight Measurement
 - We use the [Load Cell (0-5 kg.) and Amplifier]() with the [HX711_ADC]() Library. 
 - Calibartion value is set to -419.37 after we tare with known weight.
 - This module return the value in unit of gram.
 
+![](pic/weight.jpg)
+
 ## Height Measurement
 Since the bottle is placed into box which we know the length(34 cm), we install the [Ultrasonic Sensor]() in one side of the box in order to get the height value. 
 - Height = Max length(34 cm) - Sensor_value(cm)
 
+![](pic/height.jpg)
 
 ### Communication
 - Software Serial between Arduino Uno and ESPino32 for sending measured value and receiving prediction result.
