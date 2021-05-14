@@ -27,26 +27,7 @@
 
 
 
-int status1 = 1;
-uint32_t lastBounce = 0;
-uint32_t lastBounce2 = 0;
-int reqDelay = 600;
-int reqDelay1 = 200;
-bool mood1 = false;
 
-int reqDelay2 = 500;
-int reqDelay3 = 50;
-int delayBuffer;
-int counter2 = 0;
-bool twice= true;
-int push = 0;
-uint32_t push2 = 0;
-
-int j = 0;
-int mainStart=0;
-int byteLength = 8;
-int mainEnd;
-uint8_t MainColor;
 
 uint8_t status2 = 0;
 uint8_t yellow[24] = {_0,_1,_0,_0,_0,_0,_0,_0,_1,_0,_0,_0,_0,_0,_0,_0,_0,_0,_0,_0,_0,_1,_0,_0};
@@ -96,114 +77,6 @@ interrupts();
 }
 
 
-void button1(){
-if(on){
-  if((millis() - lastBounce) > reqDelay){
-      Serial.print(millis());
-      Serial.print(" ");
-    
-      Serial.print(lastBounce);
-      Serial.println(" ");
-
-      uint16_t counter3 = 0;
-      while(!digitalRead(2)){
-        counter3++;
-        delay(10);
-      }
-  if(counter3 <1000 && mood1){
-  status1++;
-  if( status1 > 4){
-    status1 = 1;
-  }
-  }
-  else if(counter3 >=1000){
-    Serial.println("ON");
-    mood1 = !(mood1);
-  }
-  if(mood1){
-    switch(status1){
-      case 1: whiteLight(); break;
-      case 2: yellowLight(); break;
-      case 3: rgbLight(); break;
-      case 4: changingRGB(); break;  
-    }
-  }else{ off();}
-  Serial.println(status1);
-  Serial.println(counter3);
-   
-  }
- lastBounce = abs(millis());
-
-}
-}
-void button2(){
-if(mood1){   
-  if((millis() - lastBounce2) > reqDelay1){
-     //Serial.println(digitalRead(3));
-      uint16_t counter3 = 0;
-      while(!digitalRead(3)){
-        if((counter3 >1000) && (on)){
-          Serial.println("long");
-          trigger();
-        }
-        counter3++;
-        delay(20);
-      }if(counter3 < 1000){
-        Serial.println(twice);
-        twice = !twice;
-        if(!twice){
-          push2 = millis();
-        }
-        else if(twice){
-          if((millis() - push2) < 1000){
-            Serial.println("double");
-            sleepMode();
-          }
-          }
-        }
-  }
- lastBounce2 = millis();
-}
-}
-
-void sleepMode(){
-  Serial.println("sleepMode");
-  on = !on;
-
-  if(!on){
-    lastBrightness = brightness;
-      for( int i = lastBrightness; i>=0; i--){
-        brightness = i;
-        updateData();
-        transferData();
-        delay(150);
-      }
-  }else{
-    for( int i = 0; i<=lastBrightness; i++){
-        brightness = i;
-        updateData();
-        transferData();
-        delay(150);
-       }
-    }
-}
-void trigger(){
-  if((status1 ==1) || (status1 ==2)){
-    brightness += fade2;
-    if((brightness >= 255) || (brightness <= 0)){
-      fade2 = -fade2;
-    }
-  updateData();
-  transferData();
-  Serial.println(brightness);
-  delay(500);
-  
-  }
-  else if(status1 ==3){
-    mixing(rgb);
-    delay(100);
-  }
-}
 
 
 

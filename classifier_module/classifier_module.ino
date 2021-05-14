@@ -89,12 +89,11 @@ void loop() {
       Serial.println("Measurements are starting");
       if (getBottleWeight() < 5) {
         Serial.println("please place a bottle");
-      } else {
+      }else{
 
         delay(1000);
         Serial.println("Height measurement in progress");
         height = getBottleHeight();
-        delay(1000);
 
         Serial.println("Weight measurement in progress");
         weight = getBottleWeight();
@@ -103,14 +102,10 @@ void loop() {
         Serial.println("Hardness measurement in progress");
         measuring();
 
-<<<<<<< HEAD
-=======
-        state = 2;
+        state = 3;
         send2ESP();
         
->>>>>>> 51d96ec5fdf9331defd3dc72002c6b21df0650ef
-        recvFromESP();
-        state = 0;
+      
       }
     }
   }else{
@@ -122,8 +117,8 @@ void loop() {
     position1 = 0;
     endposition = 0;
   }
-  send2ESP();
+  
   delay(1000);
-          send2ESP();
-
+  state = 0;
+  send2ESP();
 }
