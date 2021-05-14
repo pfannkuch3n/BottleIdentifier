@@ -40,10 +40,13 @@ Three Values can be obtained in this process:
 - Calibartion value is set to -419.37 after we tare with known weight.
 - This module return the value in unit of gram.
 
+![](pic/weight.jpg)
+
 ## Height Measurement
 Since the bottle is placed into box which we know the length(34 cm), we install the [Ultrasonic Sensor]() in one side of the box in order to get the height value. 
 - Height = Max length(34 cm) - Sensor_value(cm)
 
+![](pic/height.jpg)
 
 ### Communication
 - Software Serial between Arduino Uno and ESPino32 for sending measured value and receiving prediction result.
