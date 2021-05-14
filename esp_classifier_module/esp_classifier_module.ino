@@ -9,7 +9,7 @@
 //  SCK           18
 //  SS(slave)     5
 
-#define _0 0xC0
+#define _0 0xC0 
 #define _1 0xFC
 #define _RESET 0x00
 
