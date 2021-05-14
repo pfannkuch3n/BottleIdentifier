@@ -4,18 +4,26 @@ Project as part of an embedded Software class. The objective is a machine that c
 ---
 ## Overview
 1. Classification
+
 1.1 Classifer using machine learning
+
 1.2 Classifier module
+
 1.3 Hardness module
+
 1.4 Weight module
+
 1.5 Height module
+
 2.1 Bin Module
+
 2.2 Bin Algorithm
+
 2.3 Data Communication
 
 ## 1.1 Classifier using Machine learning
 
-A machine learning algorithm was built with the python library tensorflow.keras. From the down this site described sensor modules 5 values are obtained.
+A machine learning algorithm was built with the python library tensorflow.keras. From the lower part of this page described sensor modules 5 values are obtained.
 The height, the diameter and the weight are summarized to a new value "weightByScale" to create a stronger independent and more informative variable. The three
 remaining values are then scaled on a scale from 0-10 and fed to the prediction model.
 
